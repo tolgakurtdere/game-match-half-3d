@@ -9,23 +9,28 @@ namespace TK.Manager
 {
     public class LevelManager : SingletonBehaviour<LevelManager>
     {
+        private const string LEVEL_INDEX_KEY = "com.tk.reachedLevelIndex";
         public static event Action OnLevelLoaded;
         public static event Action OnLevelStarted;
         public static event Action<bool> OnLevelStopped;
 
         [SerializeField] private List<Level> levelPrefabs = new();
+        private static int? s_reachedLevelIndex;
+
+        private static int ReachedLevelIndex
+        {
+            get { return s_reachedLevelIndex ??= PlayerPrefs.GetInt(LEVEL_INDEX_KEY); }
+            set
+            {
+                s_reachedLevelIndex = value;
+                PlayerPrefs.SetInt(LEVEL_INDEX_KEY, value);
+                PlayerPrefs.Save();
+            }
+        }
 
         public static Level CurrentLevel { get; private set; }
-        public static Transform Thrash { get; private set; }
+
         public static int TotalLevelCount => Instance.levelPrefabs.Count;
-
-        protected override void Awake()
-        {
-            base.Awake();
-
-            //Create the thrash
-            Thrash = new GameObject("Thrash").transform;
-        }
 
         private void Start()
         {
@@ -35,14 +40,14 @@ namespace TK.Manager
         public static void LoadLevel(bool nextLevel)
         {
             if (!Instance.levelPrefabs.Any()) return;
-            if (nextLevel) PrefsManager.Instance.IncrementLevelIndex();
+            if (nextLevel) ReachedLevelIndex++;
 
-            ClearThrash();
+            if (CurrentLevel) Destroy(CurrentLevel.gameObject);
 
-            var levelToLoad = Instance.levelPrefabs[PrefsManager.Instance.GetLevelIndex() % TotalLevelCount];
-            CurrentLevel = Instantiate(levelToLoad, Vector3.zero, Quaternion.identity, Thrash);
+            var levelToLoad = Instance.levelPrefabs[ReachedLevelIndex % TotalLevelCount];
+            CurrentLevel = Instantiate(levelToLoad, Vector3.zero, Quaternion.identity, Instance.transform);
 
-            UIManager.GameUI.SetLevelCountText("Level " + (PrefsManager.Instance.GetLevelIndex() + 1));
+            UIManager.GameUI.SetLevelCountText("Level " + (ReachedLevelIndex + 1));
             UIManager.HomeUI.Show();
             OnLevelLoaded?.Invoke();
         }
@@ -72,15 +77,6 @@ namespace TK.Manager
             }
 
             OnLevelStopped?.Invoke(isSuccess);
-        }
-
-        private static void ClearThrash()
-        {
-            var count = Thrash.childCount;
-            for (var i = count - 1; i >= 0; i--)
-            {
-                Destroy(Thrash.GetChild(i).gameObject);
-            }
         }
     }
 }
