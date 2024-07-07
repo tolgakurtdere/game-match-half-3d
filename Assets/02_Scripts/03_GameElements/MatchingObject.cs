@@ -136,7 +136,7 @@ namespace MatchHalf3D
 
             var seq = DOTween.Sequence();
             seq.Join(transform.DOMove(new Vector3(0, 7, 0), 0.2f))
-                .Join(transform.DORotate(new Vector3(-90, 180, 0), 0.2f))
+                .Join(transform.DORotate(new Vector3(-60, 180, 0), 0.2f))
                 .Append(transform.DOScale(transform.localScale * 1.5f, 0.2f).SetLoops(2, LoopType.Yoyo))
                 .OnComplete(() =>
                 {

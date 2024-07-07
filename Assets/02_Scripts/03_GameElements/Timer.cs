@@ -25,7 +25,7 @@ namespace MatchHalf3D
             LevelManager.OnLevelStopped -= OnLevelStopped;
         }
 
-        void Update()
+        private void Update()
         {
             if (!_isRunning) return;
 
@@ -43,7 +43,7 @@ namespace MatchHalf3D
             }
         }
 
-        private void OnLevelLoaded()
+        private void OnLevelLoaded(int levelNo)
         {
             _remainingTime = LevelManager.CurrentLevel.TimerDuration;
 

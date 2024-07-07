@@ -10,7 +10,7 @@ namespace TK.Manager
     public class LevelManager : SingletonBehaviour<LevelManager>
     {
         private const string LEVEL_INDEX_KEY = "com.tk.reachedLevelIndex";
-        public static event Action OnLevelLoaded;
+        public static event Action<int> OnLevelLoaded;
         public static event Action OnLevelStarted;
         public static event Action<bool> OnLevelStopped;
 
@@ -27,6 +27,8 @@ namespace TK.Manager
                 PlayerPrefs.Save();
             }
         }
+
+        public static int HighestLevelNo => ReachedLevelIndex + 1;
 
         public static Level CurrentLevel { get; private set; }
 
@@ -47,9 +49,8 @@ namespace TK.Manager
             var levelToLoad = Instance.levelPrefabs[ReachedLevelIndex % TotalLevelCount];
             CurrentLevel = Instantiate(levelToLoad, Vector3.zero, Quaternion.identity, Instance.transform);
 
-            UIManager.GameUI.SetLevelCountText("Level " + (ReachedLevelIndex + 1));
             UIManager.HomeUI.Show();
-            OnLevelLoaded?.Invoke();
+            OnLevelLoaded?.Invoke(HighestLevelNo);
         }
 
         public static void StartLevel()

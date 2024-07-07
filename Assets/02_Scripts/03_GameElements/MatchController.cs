@@ -50,7 +50,6 @@ namespace MatchHalf3D
                 _currentObject = obj;
             }
 
-            AudioManager.Instance.Play(AudioManager.ClickSfx);
             MMVibrationManager.Haptic(HapticTypes.MediumImpact);
         }
 
@@ -64,7 +63,6 @@ namespace MatchHalf3D
             }
 
             GameManager.GameSettings.MatchFx.PlayFX(matchPos, Quaternion.identity);
-            AudioManager.Instance.Play(AudioManager.MatchSfx);
             MMVibrationManager.Haptic(HapticTypes.HeavyImpact);
         }
     }

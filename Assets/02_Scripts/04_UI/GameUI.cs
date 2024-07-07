@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using TK.Manager;
+using TMPro;
 using UnityEngine;
 
 namespace TK.UI
@@ -7,9 +8,19 @@ namespace TK.UI
     {
         [SerializeField] private TextMeshProUGUI levelCountText;
 
-        public void SetLevelCountText(string levelText)
+        private void OnEnable()
         {
-            levelCountText.text = levelText;
+            LevelManager.OnLevelLoaded += OnLevelLoaded;
+        }
+
+        private void OnDisable()
+        {
+            LevelManager.OnLevelLoaded -= OnLevelLoaded;
+        }
+
+        private void OnLevelLoaded(int levelNo)
+        {
+            levelCountText.text = $"Level {levelNo}";
         }
     }
 }
