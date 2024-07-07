@@ -60,6 +60,7 @@ namespace MatchHalf3D
             if (MatchingObjectCount == 0)
             {
                 LevelManager.StopLevel(true);
+                GameManager.GameSettings.Confetti.PlayFX(new Vector3(0, 5, 0), Quaternion.identity);
             }
 
             GameManager.GameSettings.MatchFx.PlayFX(matchPos, Quaternion.identity);

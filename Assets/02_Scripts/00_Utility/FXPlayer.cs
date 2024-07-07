@@ -1,7 +1,6 @@
 ﻿using System;
-using TK.Manager;
+using Lean.Pool;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace TK.Utility
 {
@@ -18,13 +17,13 @@ namespace TK.Utility
         public void PlayFX(Vector3 position)
         {
             if (!fx) return;
-            Object.Instantiate(fx, position, fx.transform.rotation, LevelManager.Thrash);
+            LeanPool.Spawn(fx, position, fx.transform.rotation);
         }
 
         public void PlayFX(Vector3 position, Quaternion rotation)
         {
             if (!fx) return;
-            Object.Instantiate(fx, position, rotation, LevelManager.Thrash);
+            LeanPool.Spawn(fx, position, rotation);
         }
     }
 }
